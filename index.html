@@ -77,6 +77,7 @@
                         li.appendChild(text);
                         output.appendChild(li);
                         textInput.value = "";
+                        document.activeElement.blur();
                         input.style.visibility = "hidden";
                         button.style.visibility = "visible";
                     } else if (film != "") {
