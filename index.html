@@ -53,7 +53,6 @@
         <script>
                 var sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
                 var items = []; 
-                var settingsLength = 8;
                 var textInput = document.getElementById('input');
                 var output = document.getElementById('output');
                 var button = document.getElementById('random_button');
@@ -79,7 +78,7 @@
                         li.appendChild(text);
                         output.appendChild(li);
                         textInput.value = "";
-                        document.activeElement.blur();
+                        // document.activeElement.blur();
                     }
                 }
 
@@ -87,11 +86,14 @@
                     var length = items.length;
                     var num = Math.floor(Math.random() * length);
                     var h2 = document.createElement('h2');
-                    var item = document.createTextNode(items[num]);
-                    if(length > 0){
+                    var item = items[num];
+                    var text = document.createTextNode(item);
+                    if(length > 0 && item != ""){
                         result.innerHTML = "";
-                        h2.appendChild(item);
+                        h2.appendChild(text);
                         result.appendChild(h2);
+                    }else{
+                        pickMovie();
                     }
                 }
 
@@ -103,7 +105,7 @@
                     var children = Array.from(document.getElementsByClassName(getClass));
 
                     if(index != -1) {
-	                    items.splice(index, 1);
+	                    items[index] = "";
                     };
 
                     children.forEach(function(child){
