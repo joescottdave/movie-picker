@@ -97,8 +97,8 @@
 
                 function deleteItem(obj){
                     var item = obj.innerHTML;
-                    var index = items.indexOf(item);
                     var getClass = obj.className;
+                    var index = parseInt(getClass.slice(5));
                     var parent = document.querySelector('ol');
                     var children = Array.from(document.getElementsByClassName(getClass));
 
