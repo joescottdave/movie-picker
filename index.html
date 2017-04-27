@@ -51,12 +51,9 @@
         </div><!-- #app -->
         </div><!-- #container -->
         <script>
-            // window.onload = function(){
                 var sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-                console.log('session' + sessionId);
                 var items = []; 
                 var settingsLength = 8;
-                // var settingsLengthSelector = document.getElementById("settings-length-selector");
                 var textInput = document.getElementById('input');
                 var output = document.getElementById('output');
                 var button = document.getElementById('random_button');
@@ -98,12 +95,6 @@
                     }
                 }
 
-                // function handleKeyDown(e){
-                //     if (e.keyCode === 13){
-                //         handleClick();
-                //     }
-                // }
-
                 function deleteItem(obj){
                     var item = obj.innerHTML;
                     var index = items.indexOf(item);
@@ -133,9 +124,6 @@
                 document.querySelector('form').addEventListener('submit', handleClick);
                 button.addEventListener('click', pickMovie);
                 reset.addEventListener('click', handleReset )
-
-            // }
-
         </script>
     </body>
 </html>
