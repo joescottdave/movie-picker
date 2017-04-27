@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Create a list of choices and randomly select one" />
     <style>
+        html{
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        body{
+            margin: 0;
+            padding:0;
+        }
+        #app {
+            margin: 0;
+            width: 320px;
+            border: black 0.5px solid;
+        }
+
         form, input, li{
             font-size: 18px;
         }
@@ -13,6 +28,7 @@
         button{
             font-size: 18px;
         }
+        
     </style>
 </head>
 <body>
@@ -43,7 +59,10 @@
         var reset = document.getElementById('reset');
         var count = 0;
 
+        var check = true;
+
         function addItem(){
+            if(check){
             var form = document.createElement('form')
             var input = document.createElement("input");
             var button = document.createElement("button");
@@ -52,6 +71,7 @@
             form.setAttribute("class", "item-" + count);
             button.setAttribute("class", "item-" + count);
             input.setAttribute("class", "item-" + count);
+            input.setAttribute("maxlength", "64");
             li.setAttribute("class", "item-" + count);
             input.setAttribute("name", randomName);
             button.innerHTML = '+';
@@ -59,20 +79,25 @@
             form.appendChild(button)
             li.appendChild(form)
             list.appendChild(li);
-            form.setAttribute('onsubmit', 'permItem(event, this)');
+            form.setAttribute('onsubmit', 'commitItem(event, this)');
             input.focus();
             count += 1;
+            check = !check;
+            }
         }
 
-        function permItem(e, obj){
+        function commitItem(e, obj){
             e.preventDefault();
             var getClass = obj.className;
             var input = document.querySelector("input." + getClass);
             var value = input.value;
             var li = document.querySelector("li." + getClass);
-            items.push(value);
-            li.innerHTML = value;
-            li.setAttribute('onclick', "deleteItem(this)");
+            if(value != ""){
+                items.push(value);
+                li.innerHTML = value;
+                li.setAttribute('onclick', "deleteItem(this)");
+                check = !check;
+            };
 
         }
 
