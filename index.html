@@ -1,131 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Random Selector</title>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Create a list of choices and randomly select one" />
-        <style>
-            *{
-                font-family: sans-serif;
-            }
-
-            div#app{
-                max-width: 320px;
-            }
-
-            input#input, ol li, p{
-                font-size: 18px;
-            }
-
-            div#result{
-                height: 100px;
-            }
-            button{
-                font-size: 18px;
-            }
-            li{
-                cursor: pointer;
-                margin-bottom: 0.4em;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="container">
-        
-        <div id="app">
-            <h1>Random Selector</h1>
-            <p>Create a list of choices and randomly select one</p>
-            <ol id='output'>
+<html>
+<head>
+    <title>Random Choice</title>
+    <style>
+        form, input, li, button{
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Random Choice</h1>
+            <button id="add-button">Add</button>
+            <button id="random-button">
+                Random Choice
+            </button>
+            <button id="reset">Reset</button>
+        </header>
+        <div>
+            <ol id="list">
             </ol>
-            <form>
-                <input name="input" type="text" id="input" placeholder="add a list item..." maxlength="64" />
-                <button id="add" type="submit">&#43;</button>
-                <button id="random_button">
-                    Random Choice
-                </button>
-                <button id="reset">Reset</button>
-            </form>
-            <div id="result">
-            </div>
-        </div><!-- #app -->
-        </div><!-- #container -->
-        <script>
-                var sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-                var items = []; 
-                var textInput = document.getElementById('input');
-                var output = document.getElementById('output');
-                var button = document.getElementById('random_button');
-                var add = document.getElementById("add");
-                var reset = document.getElementById('reset');
-                var result = document.getElementById('result');
-                var count = 0;
-                
-                function handleClick(e){
-                    e.preventDefault();
-                    var item = textInput.value;
-                    var length = items.length;
-                    if(item != ""){
-                        var li = document.createElement('li');
-                        var text = document.createTextNode(item);
-                        items.push(item)
-                        
-                        // Using class in case I decide to add a specific icon for deleting an entry
-                        li.setAttribute("class", "item-" + count);
-                        count += 1
-                        li.setAttribute("onclick", "deleteItem(this)");
+        </div>
+        <div id="result">
+        </div>
+        <div>  
+        </div>
+    </div>
+    <script>
+        var items = [];
+        var list = document.getElementById('list');
+        var add = document.getElementById('add-button');
+        var button = document.getElementById('random-button');
+        var result = document.getElementById('result');
+        var reset = document.getElementById('reset');
+        var count = 0;
 
-                        li.appendChild(text);
-                        output.appendChild(li);
-                        textInput.value = "";
-                        // document.activeElement.blur();
-                    }
-                }
+        function addItem(){
+            var form = document.createElement('form')
+            var input = document.createElement("input");
+            var button = document.createElement("button");
+            var li = document.createElement("li");
+            var randomName = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+            form.setAttribute("class", "item-" + count);
+            button.setAttribute("class", "item-" + count);
+            input.setAttribute("class", "item-" + count);
+            li.setAttribute("class", "item-" + count);
+            input.setAttribute("name", randomName);
+            button.innerHTML = '+';
+            form.appendChild(input)
+            form.appendChild(button)
+            li.appendChild(form)
+            list.appendChild(li);
+            form.setAttribute('onsubmit', 'permItem(event, this)');
+            input.focus();
+            count += 1;
+        }
 
-                function pickMovie(){
-                    var length = items.length;
-                    var num = Math.floor(Math.random() * length);
-                    var h2 = document.createElement('h2');
-                    var item = items[num];
-                    var text = document.createTextNode(item);
-                    if(length > 0 && item != ""){
-                        result.innerHTML = "";
-                        h2.appendChild(text);
-                        result.appendChild(h2);
-                    }else{
-                        pickMovie();
-                    }
-                }
+        function permItem(e, obj){
+            e.preventDefault();
+            var getClass = obj.className;
+            var input = document.querySelector("input." + getClass);
+            var value = input.value;
+            var li = document.querySelector("li." + getClass);
+            items.push(value);
+            li.innerHTML = value;
+            li.setAttribute('onclick', "deleteItem(this)");
 
-                function deleteItem(obj){
-                    var item = obj.innerHTML;
-                    var getClass = obj.className;
-                    var index = parseInt(getClass.slice(5));
-                    var parent = document.querySelector('ol');
-                    var children = Array.from(document.getElementsByClassName(getClass));
+        }
 
-                    if(index != -1) {
-	                    items[index] = "";
-                    };
+        function randomChoice(){
+            var length = items.length;
+            var num = Math.floor(Math.random() * length);
+            var h2 = document.createElement('h2');
+            var item = items[num];
+            var text = document.createTextNode(item);
+            if(length > 0 && item != ""){
+                result.innerHTML = "";
+                h2.appendChild(text);
+                result.appendChild(h2);
+            }else{
+                pickMovie();
+            }
+        }
 
-                    children.forEach(function(child){
-                        parent.removeChild(child);
-                    });
-                }
+        function handleReset(){
+            result.innerHTML = "";
+            list.innerHTML = "";
+            items = [];
+            count = 0;
+        }
 
-                function handleReset(){
-                    sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-                    textInput.setAttribute("name", "session" + sessionId);
-                    result.innerHTML = "";
-                    output.innerHTML = "";
-                    items = [];
-                    count = 0;
-                }
+        function deleteItem(obj){
+            var item = obj.innerHTML;
+            var getClass = obj.className;
+            var index = parseInt(getClass.slice(5));
+            var parent = document.querySelector('ol');
+            var children = Array.from(document.getElementsByClassName(getClass));
 
-                textInput.setAttribute("name", "session" + sessionId);
-                document.querySelector('form').addEventListener('submit', handleClick);
-                button.addEventListener('click', pickMovie);
-                reset.addEventListener('click', handleReset )
-        </script>
-    </body>
+            if(index != -1) {
+                items[index] = "";
+            };
+
+            children.forEach(function(child){
+                parent.removeChild(child);
+            });
+        }
+
+
+
+        add.addEventListener('click', addItem);
+        button.addEventListener('click', randomChoice);
+        reset.addEventListener('click', handleReset);
+
+    </script>
+</body>
 </html>

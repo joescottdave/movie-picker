@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Random Selector</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Create a list of choices and randomly select one" />
+        <style>
+            *{
+                font-family: sans-serif;
+            }
+
+            div#app{
+                max-width: 320px;
+            }
+
+            input#input, ol li, p{
+                font-size: 18px;
+            }
+
+            div#result{
+                height: 100px;
+            }
+            button{
+                font-size: 18px;
+            }
+            li{
+                cursor: pointer;
+                margin-bottom: 0.4em;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+        
+        <div id="app">
+            <h1>Random Selector</h1>
+            <p>Create a list of choices and randomly select one</p>
+            <ol id='output'>
+            </ol>
+            <form>
+                <input name="input" type="text" id="input" placeholder="add a list item..." maxlength="64" />
+                <button id="add" type="submit">&#43;</button>
+                <button id="random_button">
+                    Random Choice
+                </button>
+                <button id="reset">Reset</button>
+            </form>
+            <div id="result">
+            </div>
+        </div><!-- #app -->
+        </div><!-- #container -->
+        <script>
+                var sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+                var items = []; 
+                var textInput = document.getElementById('input');
+                var output = document.getElementById('output');
+                var button = document.getElementById('random_button');
+                var add = document.getElementById("add");
+                var reset = document.getElementById('reset');
+                var result = document.getElementById('result');
+                var count = 0;
+                
+                function handleClick(e){
+                    e.preventDefault();
+                    var item = textInput.value;
+                    var length = items.length;
+                    if(item != ""){
+                        var li = document.createElement('li');
+                        var text = document.createTextNode(item);
+                        items.push(item)
+                        
+                        // Using class in case I decide to add a specific icon for deleting an entry
+                        li.setAttribute("class", "item-" + count);
+                        count += 1
+                        li.setAttribute("onclick", "deleteItem(this)");
+
+                        li.appendChild(text);
+                        output.appendChild(li);
+                        textInput.value = "";
+                        // document.activeElement.blur();
+                    }
+                }
+
+                function pickMovie(){
+                    var length = items.length;
+                    var num = Math.floor(Math.random() * length);
+                    var h2 = document.createElement('h2');
+                    var item = items[num];
+                    var text = document.createTextNode(item);
+                    if(length > 0 && item != ""){
+                        result.innerHTML = "";
+                        h2.appendChild(text);
+                        result.appendChild(h2);
+                    }else{
+                        pickMovie();
+                    }
+                }
+
+                function deleteItem(obj){
+                    var item = obj.innerHTML;
+                    var getClass = obj.className;
+                    var index = parseInt(getClass.slice(5));
+                    var parent = document.querySelector('ol');
+                    var children = Array.from(document.getElementsByClassName(getClass));
+
+                    if(index != -1) {
+	                    items[index] = "";
+                    };
+
+                    children.forEach(function(child){
+                        parent.removeChild(child);
+                    });
+                }
+
+                function handleReset(){
+                    sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+                    textInput.setAttribute("name", "session" + sessionId);
+                    result.innerHTML = "";
+                    output.innerHTML = "";
+                    items = [];
+                    count = 0;
+                }
+
+                textInput.setAttribute("name", "session" + sessionId);
+                document.querySelector('form').addEventListener('submit', handleClick);
+                button.addEventListener('click', pickMovie);
+                reset.addEventListener('click', handleReset )
+        </script>
+    </body>
+</html>
