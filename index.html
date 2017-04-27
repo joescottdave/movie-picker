@@ -9,8 +9,9 @@
             *{
                 font-family: sans-serif;
             }
+
             div#app{
-                position: relative;
+                max-width: 320px;
             }
 
             input#input, ol li, p{
@@ -22,6 +23,10 @@
             }
             button{
                 font-size: 18px;
+            }
+            li{
+                cursor: pointer;
+                margin-bottom: 0.4em;
             }
         </style>
     </head>
@@ -46,7 +51,7 @@
         </div><!-- #app -->
         </div><!-- #container -->
         <script>
-            window.onload = function(){
+            // window.onload = function(){
                 var sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
                 console.log('session' + sessionId);
                 var items = []; 
@@ -58,6 +63,7 @@
                 var add = document.getElementById("add");
                 var reset = document.getElementById('reset');
                 var result = document.getElementById('result');
+                var count = 0;
                 
                 function handleClick(e){
                     e.preventDefault();
@@ -67,6 +73,12 @@
                         var li = document.createElement('li');
                         var text = document.createTextNode(item);
                         items.push(item)
+                        
+                        // Using class in case I decide to add a specific icon for deleting an entry
+                        li.setAttribute("class", "item-" + count);
+                        count += 1
+                        li.setAttribute("onclick", "deleteItem(this)");
+
                         li.appendChild(text);
                         output.appendChild(li);
                         textInput.value = "";
@@ -92,12 +104,29 @@
                 //     }
                 // }
 
+                function deleteItem(obj){
+                    var item = obj.innerHTML;
+                    var index = items.indexOf(item);
+                    var getClass = obj.className;
+                    var parent = document.querySelector('ol');
+                    var children = Array.from(document.getElementsByClassName(getClass));
+
+                    if(index != -1) {
+	                    items.splice(index, 1);
+                    };
+
+                    children.forEach(function(child){
+                        parent.removeChild(child);
+                    });
+                }
+
                 function handleReset(){
                     sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
                     textInput.setAttribute("name", "session" + sessionId);
                     result.innerHTML = "";
                     output.innerHTML = "";
                     items = [];
+                    count = 0;
                 }
 
                 textInput.setAttribute("name", "session" + sessionId);
@@ -105,7 +134,7 @@
                 button.addEventListener('click', pickMovie);
                 reset.addEventListener('click', handleReset )
 
-            }
+            // }
 
         </script>
     </body>
