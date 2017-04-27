@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Random Movie Picker</title>
+        <title>Random Selector</title>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <!--<link rel="stylesheet" href="./style.css" type="text/css" />-->
+        <meta name="description" content="Create a list of choices and randomly select one" />
         <style>
-            input#input{
+            *{
+                font-family: sans-serif;
+            }
+            div#app{
+                position: relative;
+            }
+
+            input#input, ol li, p{
                 font-size: 18px;
             }
 
             div#result{
                 height: 100px;
             }
-
-            /*ol#output{
-                height: 120px;
-            }*/
         </style>
     </head>
     <body>
         <div id="container">
         
         <div id="app">
-            <h1>Random Movie Picker</h1>
+            <h1>Random Selector</h1>
+            <p>Create a list of choices and randomly select one</p>
             <ol id='output'>
             </ol>
             <form>
@@ -34,8 +38,6 @@
                 </button>
                 <button id="reset">Reset</button>
             </form>
-            
-
             <div id="result">
             </div>
         </div>
@@ -69,12 +71,13 @@
                 function pickMovie(){
                     var length = movies.length;
                     var num = Math.floor(Math.random() * length);
-                    var li = document.createElement('h1');
+                    var h2 = document.createElement('h2');
                     var film = document.createTextNode(movies[num]);
-
-                    result.innerHTML = "";
-                    li.appendChild(film);
-                    output.appendChild(li);
+                    if(length > 0){
+                        result.innerHTML = "";
+                        h2.appendChild(film);
+                        result.appendChild(h2);
+                    }
                 }
 
                 // function handleKeyDown(e){
@@ -84,6 +87,7 @@
                 // }
 
                 function handleReset(){
+                    result.innerHTML = "";
                     output.innerHTML = "";
                     movies = [];
                 }
