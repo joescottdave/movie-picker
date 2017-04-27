@@ -9,20 +9,14 @@
             input#input{
                 font-size: 18px;
             }
-            p, select {
-                font-size: 16px;
-            }
-            button#random_button {
-                visibility: hidden;
-                cursor: pointer;
-            }
+
             div#result{
                 height: 100px;
             }
 
-            ol#output{
+            /*ol#output{
                 height: 120px;
-            }
+            }*/
         </style>
     </head>
     <body>
@@ -30,37 +24,26 @@
         
         <div id="app">
             <h1>Random Movie Picker</h1>
+            <ol id='output'>
+            </ol>
             <form>
-                <input name="item" type="text" id="input" placeholder="enter a movie title..."/>
+                <input name="random" type="text" id="input" placeholder="enter a movie title..."/>
                 <button id="add" type="submit">Add</button>
-                <button id="reset">Reset</button>
                 <button id="random_button">
                     Pick a Random Movie
                 </button>
+                <button id="reset">Reset</button>
             </form>
-            <ol id='output'>
-            </ol>
+            
 
             <div id="result">
-            </div>
-            <div id="settings">
-                <p> Change the number of entries:
-                <select id="settings-length-selector">
-                    <option>8</option>
-                    <option>7</option>
-                    <option>6</option>
-                    <option>5</option>
-                    <option>4</option>
-                    <option>3</option>
-                    <option>2</option>
-                <select></p>
             </div>
         </div>
         <script>
             window.onload = function(){
                 var movies = []; 
                 var settingsLength = 8;
-                var settingsLengthSelector = document.getElementById("settings-length-selector");
+                // var settingsLengthSelector = document.getElementById("settings-length-selector");
                 var textInput = document.getElementById('input');
                                     var output = document.getElementById('output');
                 var button = document.getElementById('random_button');
@@ -72,8 +55,7 @@
                     e.preventDefault();
                     var film = textInput.value;
                     var length = movies.length;
-
-                    if(length === settingsLength -1 && film != ""){
+                    if(film != ""){
                         var li = document.createElement('li');
                         var text = document.createTextNode(film);
                         movies.push(film)
@@ -81,57 +63,35 @@
                         output.appendChild(li);
                         textInput.value = "";
                         document.activeElement.blur();
-                        input.style.visibility = "hidden";
-                        button.style.visibility = "visible";
-                    } else if (film != "") {
-                        var li = document.createElement('li');
-                        var text = document.createTextNode(film);
-                        movies.push(film)
-                        li.appendChild(text);
-                        output.appendChild(li);
-                        textInput.value = "";
                     }
                 }
 
                 function pickMovie(){
                     var length = movies.length;
-                    
                     var num = Math.floor(Math.random() * length);
                     var li = document.createElement('h1');
                     var film = document.createTextNode(movies[num]);
-                    input.style.visibility = "hidden";
+
                     result.innerHTML = "";
                     li.appendChild(film);
                     output.appendChild(li);
-                    button.style.visibility = "hidden";
-                    add.style.visibility="hidden";
                 }
 
-                function handleKeyDown(e){
-                    if (e.keyCode === 13){
-                        handleClick();
-                    }
-                }
+                // function handleKeyDown(e){
+                //     if (e.keyCode === 13){
+                //         handleClick();
+                //     }
+                // }
 
                 function handleReset(){
                     output.innerHTML = "";
                     movies = [];
-                    input.style.visibility = "visible";
-                    button.style.visibility = "hidden";
-                    add.style.visibility = "visible"
-                    settingsLengthSelector.selectedIndex = 0;
                 }
 
-                function handleSelect(){
-                    settingsLength = parseInt(this.options[this.selectedIndex].innerHTML);
-                }
-
-                // textInput.addEventListener('keydown', handleKeyDown );
                 document.querySelector('form').addEventListener('submit', handleClick);
                 button.addEventListener('click', pickMovie);
-                // add.addEventListener('click', handleClick);
                 reset.addEventListener('click', handleReset )
-                settingsLengthSelector.addEventListener('change', handleSelect )
+
             }
 
         </script>
