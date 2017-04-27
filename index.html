@@ -31,7 +31,7 @@
             <ol id='output'>
             </ol>
             <form>
-                <input name="random" type="text" id="input" placeholder="enter a movie title..."/>
+                <input name="random" type="text" id="input" placeholder="add a list item..."/>
                 <button id="add" type="submit">Add</button>
                 <button id="random_button">
                     Pick a Random Movie
@@ -40,14 +40,17 @@
             </form>
             <div id="result">
             </div>
-        </div>
+        </div><!-- #app -->
+        </div><!-- #container -->
         <script>
             window.onload = function(){
-                var movies = []; 
+                var sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+                console.log('session' + sessionId);
+                var items = []; 
                 var settingsLength = 8;
                 // var settingsLengthSelector = document.getElementById("settings-length-selector");
                 var textInput = document.getElementById('input');
-                                    var output = document.getElementById('output');
+                var output = document.getElementById('output');
                 var button = document.getElementById('random_button');
                 var add = document.getElementById("add");
                 var reset = document.getElementById('reset');
@@ -55,12 +58,12 @@
                 
                 function handleClick(e){
                     e.preventDefault();
-                    var film = textInput.value;
-                    var length = movies.length;
-                    if(film != ""){
+                    var item = textInput.value;
+                    var length = items.length;
+                    if(item != ""){
                         var li = document.createElement('li');
-                        var text = document.createTextNode(film);
-                        movies.push(film)
+                        var text = document.createTextNode(item);
+                        items.push(item)
                         li.appendChild(text);
                         output.appendChild(li);
                         textInput.value = "";
@@ -69,13 +72,13 @@
                 }
 
                 function pickMovie(){
-                    var length = movies.length;
+                    var length = items.length;
                     var num = Math.floor(Math.random() * length);
                     var h2 = document.createElement('h2');
-                    var film = document.createTextNode(movies[num]);
+                    var item = document.createTextNode(items[num]);
                     if(length > 0){
                         result.innerHTML = "";
-                        h2.appendChild(film);
+                        h2.appendChild(item);
                         result.appendChild(h2);
                     }
                 }
@@ -87,11 +90,14 @@
                 // }
 
                 function handleReset(){
+                    sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+                    textInput.setAttribute("name", "session" + sessionId);
                     result.innerHTML = "";
                     output.innerHTML = "";
-                    movies = [];
+                    items = [];
                 }
 
+                textInput.setAttribute("name", "session" + sessionId);
                 document.querySelector('form').addEventListener('submit', handleClick);
                 button.addEventListener('click', pickMovie);
                 reset.addEventListener('click', handleReset )
