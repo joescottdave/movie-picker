@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Random Movie Picker</title>
+        <title>Random Selector</title>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <!--<link rel="stylesheet" href="./style.css" type="text/css" />-->
+        <meta name="description" content="Create a list of choices and randomly select one" />
         <style>
-            html{
-                font-size: 16px;
+            *{
+                font-family: sans-serif;
             }
-            button#random_button {
-                visibility: hidden;
-                cursor: pointer;
-            }
-            div#result{
-                height: 100px;
+            div#app{
+                position: relative;
             }
 
-            ol#output{
-                height: 120px;
+            input#input, ol li, p{
+                font-size: 18px;
+            }
+
+            div#result{
+                height: 100px;
             }
         </style>
     </head>
@@ -26,104 +26,82 @@
         <div id="container">
         
         <div id="app">
-            <h1>Random Movie Picker</h1>
-            <input type="text" id="input" placeholder="enter a movie title..."/>
-            <button id="add">Add</button>
-            <button id="reset">Reset</button>
-            <button id="random_button">
-                Pick a Random Movie
-            </button>
+            <h1>Random Selector</h1>
+            <p>Create a list of choices and randomly select one</p>
             <ol id='output'>
             </ol>
-
+            <form>
+                <input name="random" type="text" id="input" placeholder="add a list item..."/>
+                <button id="add" type="submit">Add</button>
+                <button id="random_button">
+                    Pick a Random Movie
+                </button>
+                <button id="reset">Reset</button>
+            </form>
             <div id="result">
             </div>
-            <div id="settings">
-                <p> Change the number of entries:
-                <select id="settings-length-selector">
-                    <option>8</option>
-                    <option>7</option>
-                    <option>6</option>
-                    <option>5</option>
-                    <option>4</option>
-                    <option>3</option>
-                    <option>2</option>
-                <select></p>
-            </div>
-        </div>
+        </div><!-- #app -->
+        </div><!-- #container -->
         <script>
             window.onload = function(){
-                var movies = []; 
+                var sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+                console.log('session' + sessionId);
+                var items = []; 
                 var settingsLength = 8;
-                var settingsLengthSelector = document.getElementById("settings-length-selector");
+                // var settingsLengthSelector = document.getElementById("settings-length-selector");
                 var textInput = document.getElementById('input');
-                                    var output = document.getElementById('output');
+                var output = document.getElementById('output');
                 var button = document.getElementById('random_button');
                 var add = document.getElementById("add");
                 var reset = document.getElementById('reset');
                 var result = document.getElementById('result');
                 
-                function handleClick(){
-                    var film = textInput.value;
-                    var length = movies.length;
-
-                    if(length === settingsLength -1 && film != ""){
+                function handleClick(e){
+                    e.preventDefault();
+                    var item = textInput.value;
+                    var length = items.length;
+                    if(item != ""){
                         var li = document.createElement('li');
-                        var text = document.createTextNode(film);
-                        movies.push(film)
+                        var text = document.createTextNode(item);
+                        items.push(item)
                         li.appendChild(text);
                         output.appendChild(li);
                         textInput.value = "";
-                        input.style.visibility = "hidden";
-                        button.style.visibility = "visible";
-                    } else if (film != "") {
-                        var li = document.createElement('li');
-                        var text = document.createTextNode(film);
-                        movies.push(film)
-                        li.appendChild(text);
-                        output.appendChild(li);
-                        textInput.value = "";
+                        document.activeElement.blur();
                     }
                 }
 
                 function pickMovie(){
-                    var length = movies.length;
-                    
+                    var length = items.length;
                     var num = Math.floor(Math.random() * length);
-                    var li = document.createElement('h1');
-                    var film = document.createTextNode(movies[num]);
-                    input.style.visibility = "hidden";
-                    result.innerHTML = "";
-                    li.appendChild(film);
-                    output.appendChild(li);
-                    button.style.visibility = "hidden";
-                    add.style.visibility="hidden";
-                }
-
-                function handleKeyDown(e){
-                    if (e.keyCode === 13){
-                        handleClick();
+                    var h2 = document.createElement('h2');
+                    var item = document.createTextNode(items[num]);
+                    if(length > 0){
+                        result.innerHTML = "";
+                        h2.appendChild(item);
+                        result.appendChild(h2);
                     }
                 }
 
+                // function handleKeyDown(e){
+                //     if (e.keyCode === 13){
+                //         handleClick();
+                //     }
+                // }
+
                 function handleReset(){
+                    sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+                    textInput.setAttribute("name", "session" + sessionId);
+                    result.innerHTML = "";
                     output.innerHTML = "";
-                    movies = [];
-                    input.style.visibility = "visible";
-                    button.style.visibility = "hidden";
-                    add.style.visibility = "visible"
-                    settingsLengthSelector.selectedIndex = 0;
+                    items = [];
                 }
 
-                function handleSelect(){
-                    settingsLength = parseInt(this.options[this.selectedIndex].innerHTML);
-                }
-
-                textInput.addEventListener('keydown', handleKeyDown );
+                textInput.setAttribute("name", "session" + sessionId);
+                document.querySelector('form').addEventListener('submit', handleClick);
                 button.addEventListener('click', pickMovie);
-                add.addEventListener('click', handleClick);
                 reset.addEventListener('click', handleReset )
-                settingsLengthSelector.addEventListener('change', handleSelect )
+
             }
 
         </script>
